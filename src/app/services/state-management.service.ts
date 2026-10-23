@@ -1,17 +1,19 @@
-import { Injectable } from '@angular/core';
-
+import { Injectable, inject } from '@angular/core';
+import { LoggerService } from './logger.service';
 
 // tinstancih mara barka zeyed 
 @Injectable({
   providedIn: 'root',
 })
 export class StateManagementService {
- // persisti data under a given  key  
+  private logger = inject(LoggerService);
+
+  // persisti data under a given  key  
   persist<T>(key: string, data: T): void {
     try {
       localStorage.setItem(key, JSON.stringify(data));
     } catch (error) {
-      console.error(`[StateManagementService] Error persisting state for key "${key}":`, error);
+      this.logger.logger(`[StateManagementService] Error persisting state for key "${key}": ${error}`);
     }
   }
 
@@ -24,7 +26,7 @@ export class StateManagementService {
       }
       return JSON.parse(item) as T;
     } catch (error) {
-      console.error(`[StateManagementService] Error reading state for key "${key}":`, error);
+      this.logger.logger(`[StateManagementService] Error reading state for key "${key}": ${error}`);
       return null;
     }
   }
@@ -38,7 +40,7 @@ export class StateManagementService {
         localStorage.clear();
       }
     } catch (error) {
-      console.error(`[StateManagementService] Error clearing state for key "${key}":`, error);
+      this.logger.logger(`[StateManagementService] Error clearing state for key "${key}": ${error}`);
     }
   }
 }
