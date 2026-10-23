@@ -29,6 +29,7 @@ import { NgclassComponent } from "./directives/ngclass/ngclass.component";
 import { TodoComponent } from "./todo/todo/todo.component";
 
 import { HighlightDirective } from "./directives/highlight.directive";
+import { RainbowDirective } from "./directives/rainbow.directive";
 
 import { Btc2usdPipe } from "./pipes/btc2usd.pipe";
 import { AppRoutingModule } from "./app-routing.module";
@@ -77,6 +78,7 @@ import { SliderComponent } from "./rxjs/slider/slider.component";
     MiniWordComponent,
     NgclassComponent,
     HighlightDirective,
+    RainbowDirective,
     Btc2usdPipe,
     TodoComponent,
     NavbarComponent,
