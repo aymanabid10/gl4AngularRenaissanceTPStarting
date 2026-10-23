@@ -8,20 +8,17 @@ import { HttpHeaders } from '@angular/common/http';
 export class AuthInterceptor implements HttpInterceptor {
   private authService = inject(AuthService);
 
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
-  constructor() {}
-
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     if (this.authService.isAuthenticated()) {
-      const token = localStorage.getItem('token') ?? ''
-      const cloneReq = request.clone({ setHeaders: {
-        'Authorization': token
-      } });
+      const token = this.authService.token() ?? ''
+      const cloneReq = request.clone({
+        setHeaders: {
+          'Authorization': token
+        }
+      });
       return next.handle(cloneReq);
     }
     return next.handle(request);

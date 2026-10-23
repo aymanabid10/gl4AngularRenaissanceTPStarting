@@ -1,8 +1,9 @@
-import { provideZoneChangeDetection, isDevMode, importProvidersFrom } from "@angular/core";
+import { provideZoneChangeDetection, isDevMode, importProvidersFrom, APP_INITIALIZER } from "@angular/core";
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 
 import { AuthInterceptorProvider } from "./app/auth/interceptors/auth.interceptor";
+import { AuthService } from "./app/auth/services/auth.service";
 import { provideHttpClient, withXhr, withInterceptorsFromDi } from "@angular/common/http";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -24,6 +25,12 @@ bootstrapApplication(AppComponent, {
             registrationStrategy: "registerWhenStable:30000",
         })),
         AuthInterceptorProvider,
+        {
+            provide: APP_INITIALIZER,
+            useFactory: (authService: AuthService) => () => authService.init(),
+            deps: [AuthService],
+            multi: true,
+        },
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
     ]
 })
