@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Todo } from '../model/todo';
 import { TodoService } from '../service/todo.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-todo',
@@ -8,12 +9,17 @@ import { TodoService } from '../service/todo.service';
     styleUrls: ['./todo.component.css'],
     providers: [TodoService],
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [FormsModule]
 })
 export class TodoComponent {
+  private todoService = inject(TodoService);
+
   todos: Todo[] = [];
   todo = new Todo();
-  constructor(private todoService: TodoService) {
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+  constructor() {
     this.todos = this.todoService.getTodos();
   }
   addTodo() {

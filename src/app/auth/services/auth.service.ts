@@ -1,4 +1,4 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { CredentialsDto } from '../dto/credentials.dto';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import { HttpClient } from '@angular/common/http';
@@ -10,6 +10,7 @@ import { UserDto } from '../dto/user.dto';
   providedIn: 'root',
 })
 export class AuthService {
+  private http = inject(HttpClient);
 
 
   // hetha l user record bich trackiw garder la trace (id ,email)
@@ -24,7 +25,7 @@ export class AuthService {
   // is authenticated nkhawloha computed khaterha derived mil  signal token (derived state)
   readonly isAuthenticated = computed(() => !!this._token());
 
-  constructor(private http: HttpClient) {
+  constructor() {
     // kol  creation  tfetchi  state taa user
     this.loadStateFromLocalStorage();
   }
