@@ -1,24 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Cv } from '../model/cv';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmbaucheService {
-  private embauchees: Cv[] = [];
-
-  constructor() {}
-
-  /**
-   *
-   * Retourne la liste des embauchees
-   *
-   * @returns CV[]
-   *
-   */
-  getEmbauchees(): Cv[] {
-    return this.embauchees;
-  }
+  // I changed the array to private signal to make it
+  // reactive and to avoid direct modification from outside
+  #embauchees = signal<Cv[]>([]);
+  embauchees = this.#embauchees.asReadonly();
 
   /**
    *
@@ -29,8 +19,10 @@ export class EmbaucheService {
    * @returns boolean
    */
   embauche(cv: Cv): boolean {
-    if (this.embauchees.indexOf(cv) == -1) {
-      this.embauchees.push(cv);
+    // I am using some instead of indexOf because indexOf 
+    // compares references 
+    if (this.#embauchees().some((e) => e.id === cv.id) == false) {
+      this.#embauchees.update((embauchees) => [...embauchees, cv]);
       return true;
     }
     return false;
