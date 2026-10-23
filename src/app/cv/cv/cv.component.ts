@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Component, ChangeDetectionStrategy, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
 import { Cv } from "../model/cv";
 import { LoggerService } from "../../services/logger.service";
 import { ToastrService } from "ngx-toastr";
@@ -10,10 +11,13 @@ import { CvService } from "../services/cv.service";
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class CvComponent {
-  cvs: Cv[] = [];
-  selectedCv: Cv | null = null;
-  /*   selectedCv: Cv | null = null; */
+export class CvComponent implements OnInit {
+  // PROBLEM: cvs/selectedCv were plain fields written from subscribe callbacks, and the
+  // selectCv$ subscription was never released (root-provided Subject → leak).
+  // → FIX: expose cold streams; the template's async pipe subscribes on view creation,
+  // unsubscribes on destroy and marks the view for check on each emission.
+  cvs$: Observable<Cv[]>;
+  selectedCv$: Observable<Cv>;
   date = new Date();
 
   constructor(
@@ -21,28 +25,16 @@ export class CvComponent {
     private toastr: ToastrService,
     private cvService: CvService
   ) {
-    // PROBLEM: HTTP call, toasts and logging run in the constructor, so merely instantiating the
-    // component (incl. in tests) fires a request, and cvs/selectedCv are written from callbacks.
-    // → FIX (TP1-28): expose cvs$ as a cold stream consumed by the async pipe; side effects move
-    // to ngOnInit/tap().
-    this.cvService.getCvs().subscribe({
-      next: (cvs) => {
-        this.cvs = cvs;
-      },
-      // PROBLEM: error handling is buried in the subscriber, so the stream cannot be reused or
-      // composed. → FIX (TP1-29): catchError in the pipe returns the fake cvs as a fallback stream.
-      error: () => {
-        this.cvs = this.cvService.getFakeCvs();
-        this.toastr.error(`
-          Attention!! Les données sont fictives, problème avec le serveur.
-          Veuillez contacter l'admin.`);
-      },
-    });
+    // PROBLEM: the constructor fired the HTTP call, toasts and logging, so instantiating the
+    // component (incl. in tests) had side effects. → FIX: the constructor only wires streams.
+    this.cvs$ = this.cvService.getCvs();
+    this.selectedCv$ = this.cvService.selectCv$;
+  }
+
+  ngOnInit(): void {
+    // One-shot UI side effects live in ngOnInit rather than tap() on a stream: tap() would
+    // re-fire on every subscription to cvs$ (each async pipe or resubscribe), ngOnInit runs once.
     this.logger.logger("je suis le cvComponent");
     this.toastr.info("Bienvenu dans notre CvTech");
-    // PROBLEM: selectCv$ is a Subject on a root-provided service and never completes, so every
-    // CvComponent instance leaves a live subscriber behind (leak) that is never unsubscribed.
-    // → FIX (TP1-28): bind selectedCv$ with the async pipe, which unsubscribes on destroy.
-    this.cvService.selectCv$.subscribe((cv) => (this.selectedCv = cv));
   }
 }
