@@ -82,4 +82,24 @@ describe('DetailsCvComponent', () => {
 
     expect(cvService.getCvById).toHaveBeenCalledTimes(2);
   });
+
+  it('deletes the cv, shows a success toast and redirects to the list', () => {
+    cvService.deleteCvById.and.returnValue(of({}));
+
+    createComponent().deleteCv(cv);
+
+    expect(cvService.deleteCvById).toHaveBeenCalledWith(cv.id);
+    expect(toastr.success).toHaveBeenCalledTimes(1);
+    expect(router.navigate).toHaveBeenCalledWith(['cv']);
+  });
+
+  it('shows an error toast and stays on the page when the deletion fails', () => {
+    cvService.deleteCvById.and.returnValue(throwError(() => new Error('500')));
+
+    createComponent().deleteCv(cv);
+
+    expect(toastr.error).toHaveBeenCalledTimes(1);
+    expect(toastr.success).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
 });
