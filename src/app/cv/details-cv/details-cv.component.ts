@@ -24,11 +24,16 @@ export class DetailsCvComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // PROBLEM: snapshot reads the id once, so navigating /cv/1 → /cv/2 while this component stays
+    // mounted shows stale data; cv is also written from a callback instead of a bound stream.
+    // → FIX (TP1-28): cv$ = paramMap.pipe(switchMap(getCvById)) consumed with the async pipe.
     const id = this.activatedRoute.snapshot.params['id'];
     this.cvService.getCvById(+id).subscribe({
         next: (cv) => {
           this.cv = cv;
         },
+        // PROBLEM: the error is swallowed (unused `e`) and the user is redirected with no feedback.
+        // → FIX (TP1-29): catchError that surfaces a toast, then redirects.
         error: (e) => {
           this.router.navigate([APP_ROUTES.cv]);
         },
