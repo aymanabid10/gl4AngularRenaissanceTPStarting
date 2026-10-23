@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Cv } from '../model/cv';
 import { CvService } from '../services/cv.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, map, switchMap } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { APP_ROUTES } from '../../../config/routes.config';
 import { AuthService } from '../../auth/services/auth.service';
@@ -13,32 +14,28 @@ import { AuthService } from '../../auth/services/auth.service';
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class DetailsCvComponent implements OnInit {
-  cv: Cv | null = null;
+export class DetailsCvComponent {
+  // PROBLEM: snapshot read the id once, so /cv/1 → /cv/2 with the component still mounted showed
+  // stale data, and cv was written from a subscribe callback.
+  // → FIX: paramMap emits on every param change; switchMap cancels the in-flight request of the
+  // previous id. The template subscribes through the async pipe.
+  cv$: Observable<Cv>;
+
   constructor(
     private cvService: CvService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private toastr: ToastrService,
     public authService: AuthService
-  ) {}
-
-  ngOnInit() {
-    // PROBLEM: snapshot reads the id once, so navigating /cv/1 → /cv/2 while this component stays
-    // mounted shows stale data; cv is also written from a callback instead of a bound stream.
-    // → FIX (TP1-28): cv$ = paramMap.pipe(switchMap(getCvById)) consumed with the async pipe.
-    const id = this.activatedRoute.snapshot.params['id'];
-    this.cvService.getCvById(+id).subscribe({
-        next: (cv) => {
-          this.cv = cv;
-        },
-        // PROBLEM: the error is swallowed (unused `e`) and the user is redirected with no feedback.
-        // → FIX (TP1-29): catchError that surfaces a toast, then redirects.
-        error: (e) => {
-          this.router.navigate([APP_ROUTES.cv]);
-        },
-      });
+  ) {
+    this.cv$ = this.activatedRoute.paramMap.pipe(
+      map((params) => Number(params.get('id'))),
+      switchMap((id) => this.cvService.getCvById(id))
+    );
   }
+
+  // deleteCv keeps a manual subscribe on purpose: it is a one-shot user action with no value to
+  // bind to the template, and the HTTP observable completes on its own (nothing to unsubscribe).
   deleteCv(cv: Cv) {
     this.cvService.deleteCvById(cv.id).subscribe({
       next: () => {
