@@ -41,4 +41,24 @@ describe('TtcComponent', () => {
     expect(component.prixUnitaireTtc()).toBeCloseTo(107);
     expect(component.totalTtc()).toBeCloseTo(107);
   });
+
+  it('should not apply a discount under 10 pieces', () => {
+    component.prixHt.set(100);
+    component.quantite.set(9);
+
+    expect(component.tauxRemise()).toBe(0);
+    expect(component.totalTtc()).toBeCloseTo(1062);
+  });
+
+  it('should apply a 20% discount from 10 to 15 pieces', () => {
+    component.prixHt.set(100);
+
+    component.quantite.set(10);
+    expect(component.tauxRemise()).toBe(20);
+    expect(component.totalTtc()).toBeCloseTo(944);
+
+    component.quantite.set(15);
+    expect(component.tauxRemise()).toBe(20);
+    expect(component.totalTtc()).toBeCloseTo(1416);
+  });
 });
