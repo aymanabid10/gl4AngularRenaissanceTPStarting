@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from "@angular/core";
 import { Cv } from "../model/cv";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { API } from "../../../config/api.config";
 
@@ -55,8 +55,15 @@ export class CvService {
    *
    */
   deleteCvById(id: number): Observable<any> {
-    return this.http.delete<any>(API.cv + id);
-  }
+  return this.http.delete<any>(API.cv + id).pipe(
+    tap(() => {
+      if (this.#selectedCv() && this.#selectedCv()!.id === id) {
+        this.#selectedCv.set(null);
+      }
+    })
+  );
+}
+
 
   addCv(cv: Cv): Observable<Cv> {
     return this.http.post<any>(API.cv, cv);
