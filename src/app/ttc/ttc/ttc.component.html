@@ -1,0 +1,37 @@
+<div class="ttc-page">
+  <div class="card">
+    <div class="card-header">Calculateur TTC</div>
+    <div class="card-body">
+      <div class="mb-3">
+        <label for="prixHt" class="form-label">Prix HT</label>
+        <input
+          id="prixHt"
+          type="number"
+          min="0"
+          class="form-control"
+          [(ngModel)]="prixHt"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="quantite" class="form-label">Quantité</label>
+        <input
+          id="quantite"
+          type="number"
+          min="1"
+          class="form-control"
+          [(ngModel)]="quantite"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="tva" class="form-label">TVA (%)</label>
+        <input
+          id="tva"
+          type="number"
+          min="0"
+          class="form-control"
+          [(ngModel)]="tva"
+        />
+      </div>
+    </div>
+  </div>
+</div>
