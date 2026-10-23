@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 const QUANTITE_MIN_REMISE = 10;
 const QUANTITE_MAX_REMISE = 15;
 const TAUX_REMISE_PALIER_1 = 20;
+const TAUX_REMISE_PALIER_2 = 30;
 
 @Component({
   selector: 'app-ttc',
@@ -28,7 +29,10 @@ export class TtcComponent {
 
   readonly tauxRemise = computed(() => {
     const quantite = this.quantite();
-    if (quantite >= QUANTITE_MIN_REMISE && quantite <= QUANTITE_MAX_REMISE) {
+    if (quantite > QUANTITE_MAX_REMISE) {
+      return TAUX_REMISE_PALIER_2;
+    }
+    if (quantite >= QUANTITE_MIN_REMISE) {
       return TAUX_REMISE_PALIER_1;
     }
     return 0;
