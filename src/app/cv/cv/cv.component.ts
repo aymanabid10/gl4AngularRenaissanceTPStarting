@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, catchError, of } from "rxjs";
 import { Cv } from "../model/cv";
 import { LoggerService } from "../../services/logger.service";
 import { ToastrService } from "ngx-toastr";
@@ -27,7 +27,18 @@ export class CvComponent implements OnInit {
   ) {
     // PROBLEM: the constructor fired the HTTP call, toasts and logging, so instantiating the
     // component (incl. in tests) had side effects. → FIX: the constructor only wires streams.
-    this.cvs$ = this.cvService.getCvs();
+    // PROBLEM: the fake-cvs fallback and error toast lived in a subscribe error callback, outside
+    // the stream, so the pipeline could not be composed or reused.
+    // → FIX: catchError swaps the failed request for a fallback stream, keeping cvs$ a plain
+    // Observable<Cv[]> that never errors for the template.
+    this.cvs$ = this.cvService.getCvs().pipe(
+      catchError(() => {
+        this.toastr.error(`
+          Attention!! Les données sont fictives, problème avec le serveur.
+          Veuillez contacter l'admin.`);
+        return of(this.cvService.getFakeCvs());
+      })
+    );
     this.selectedCv$ = this.cvService.selectCv$;
   }
 
