@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   BehaviorSubject,
   Observable,
@@ -12,9 +12,11 @@ import { ProductService } from "./services/product.service";
 import { Settings } from "./dto/product-settings.dto";
 
 @Component({
-  selector: "app-products",
-  templateUrl: "./products.component.html",
-  styleUrls: ["./products.component.css"],
+    selector: "app-products",
+    templateUrl: "./products.component.html",
+    styleUrls: ["./products.component.css"],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class ProductsComponent {
   /* Todo : Faire le nécessaire pour créer le flux des produits à afficher */

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Cv } from '../model/cv';
 import { CvService } from '../services/cv.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,9 +7,11 @@ import { APP_ROUTES } from '../../../config/routes.config';
 import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
-  selector: 'app-details-cv',
-  templateUrl: './details-cv.component.html',
-  styleUrls: ['./details-cv.component.css'],
+    selector: 'app-details-cv',
+    templateUrl: './details-cv.component.html',
+    styleUrls: ['./details-cv.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class DetailsCvComponent implements OnInit {
   cv: Cv | null = null;
