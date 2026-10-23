@@ -3,30 +3,18 @@
   Name:
   <input type="text" class="form-control" formControlName="name" />
   @if (form.get('name')?.errors && form.get('name')?.touched) {
-    <div
-      class="alert alert-danger"
-      >
-      Ce champ est obligatoire
-    </div>
+    <div class="alert alert-danger">Ce champ est obligatoire</div>
   }
   Firstname:
   <input type="text" class="form-control" formControlName="firstname" /> Age:
   <input type="text" class="form-control" formControlName="age" /> Cin:
   <input type="text" class="form-control" formControlName="cin" />
-  @if (
-    form.errors && form.errors['cinFirstCars'] && cin.touched && age.touched
-    ) {
-    <div
-      class="alert alert-danger"
-      >
-      Cette Cin est invalide
-    </div>
+  @if (form.errors && form.errors['cinFirstCars'] && cin.touched && age.touched) {
+    <div class="alert alert-danger">Cette Cin est invalide</div>
   }
   Job: <input type="text" class="form-control" formControlName="job" /> Path:
   <input type="text" class="form-control" formControlName="path" />
 
-  <button [disabled]="form.invalid" class="btn btn-primary" (click)="addCv()">
-    add cv
-  </button>
+  <button [disabled]="form.invalid" class="btn btn-primary" (click)="addCv()">add cv</button>
 </form>
 {{ form.errors | json }}

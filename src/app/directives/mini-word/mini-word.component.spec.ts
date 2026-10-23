@@ -8,9 +8,8 @@ describe('MiniWordComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MiniWordComponent ]
-    })
-    .compileComponents();
+      declarations: [MiniWordComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MiniWordComponent);
     component = fixture.componentInstance;

@@ -4,16 +4,16 @@ import { EmbaucheService } from '../services/embauche.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-    selector: 'app-cv-card',
-    templateUrl: './cv-card.component.html',
-    styleUrls: ['./cv-card.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-cv-card',
+  templateUrl: './cv-card.component.html',
+  styleUrls: ['./cv-card.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class CvCardComponent {
   constructor(
     private embaucheService: EmbaucheService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
   ) {}
   @Input() cv: Cv | null = null;
 
@@ -21,13 +21,9 @@ export class CvCardComponent {
   embaucher() {
     if (this.cv) {
       if (this.embaucheService.embauche(this.cv)) {
-        this.toastr.success(
-          `${this.cv?.firstname} ${this.cv?.name} a été pré embauché`
-        );
+        this.toastr.success(`${this.cv?.firstname} ${this.cv?.name} a été pré embauché`);
       } else {
-        this.toastr.warning(
-          `${this.cv?.firstname} ${this.cv?.name} est déjà pré embauché`
-        );
+        this.toastr.warning(`${this.cv?.firstname} ${this.cv?.name} est déjà pré embauché`);
       }
     }
   }

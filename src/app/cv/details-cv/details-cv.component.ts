@@ -7,11 +7,11 @@ import { APP_ROUTES } from '../../../config/routes.config';
 import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
-    selector: 'app-details-cv',
-    templateUrl: './details-cv.component.html',
-    styleUrls: ['./details-cv.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-details-cv',
+  templateUrl: './details-cv.component.html',
+  styleUrls: ['./details-cv.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class DetailsCvComponent implements OnInit {
   cv: Cv | null = null;
@@ -20,19 +20,19 @@ export class DetailsCvComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private toastr: ToastrService,
-    public authService: AuthService
+    public authService: AuthService,
   ) {}
 
   ngOnInit() {
     const id = this.activatedRoute.snapshot.params['id'];
     this.cvService.getCvById(+id).subscribe({
-        next: (cv) => {
-          this.cv = cv;
-        },
-        error: (e) => {
-          this.router.navigate([APP_ROUTES.cv]);
-        },
-      });
+      next: (cv) => {
+        this.cv = cv;
+      },
+      error: (e) => {
+        this.router.navigate([APP_ROUTES.cv]);
+      },
+    });
   }
   deleteCv(cv: Cv) {
     this.cvService.deleteCvById(cv.id).subscribe({
@@ -41,9 +41,7 @@ export class DetailsCvComponent implements OnInit {
         this.router.navigate([APP_ROUTES.cv]);
       },
       error: () => {
-        this.toastr.error(
-          `Problème avec le serveur veuillez contacter l'admin`
-        );
+        this.toastr.error(`Problème avec le serveur veuillez contacter l'admin`);
       },
     });
   }

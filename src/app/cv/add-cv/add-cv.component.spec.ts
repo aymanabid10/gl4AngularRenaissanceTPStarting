@@ -8,9 +8,8 @@ describe('AddCvComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddCvComponent ]
-    })
-    .compileComponents();
+      declarations: [AddCvComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AddCvComponent);
     component = fixture.componentInstance;

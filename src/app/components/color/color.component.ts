@@ -1,21 +1,21 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-    selector: "app-color",
-    templateUrl: "./color.component.html",
-    styleUrls: ["./color.component.css"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-color',
+  templateUrl: './color.component.html',
+  styleUrls: ['./color.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class ColorComponent implements OnInit {
-  @Input() defaultColor = "red";
+  @Input() defaultColor = 'red';
 
   /**
    *
    * The color representing the Div
    */
-  divColor = "";
+  divColor = '';
 
   /**
    * It change the div backgound color
@@ -24,11 +24,11 @@ export class ColorComponent implements OnInit {
    */
 
   constructor(private activatedRoute: ActivatedRoute) {
-    console.log("In constructor", this.defaultColor);
+    console.log('In constructor', this.defaultColor);
   }
 
   ngOnInit(): void {
-    console.log("In ngOnInit", this.defaultColor);
+    console.log('In ngOnInit', this.defaultColor);
     this.divColor = this.defaultColor;
   }
 
