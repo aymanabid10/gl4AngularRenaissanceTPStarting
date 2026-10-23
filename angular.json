@@ -19,15 +19,9 @@
             "index": "src/index.html",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/manifest.webmanifest"
-            ],
+            "assets": ["src/favicon.ico", "src/assets", "src/manifest.webmanifest"],
             "styles": ["src/styles.css"],
-            "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ],
+            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"],
             "serviceWorker": "ngsw-config.json",
             "browser": "src/main.ts"
           },
@@ -79,11 +73,7 @@
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/manifest.webmanifest"
-            ],
+            "assets": ["src/favicon.ico", "src/assets", "src/manifest.webmanifest"],
             "styles": ["src/styles.css"],
             "scripts": []
           }

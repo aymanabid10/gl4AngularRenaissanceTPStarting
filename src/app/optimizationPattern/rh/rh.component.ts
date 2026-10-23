@@ -1,12 +1,12 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {User, UsersService} from "../users.service";
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { User, UsersService } from '../users.service';
 import * as ChartJs from 'chart.js/auto';
 @Component({
-    selector: 'app-rh',
-    templateUrl: './rh.component.html',
-    styleUrls: ['./rh.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-rh',
+  templateUrl: './rh.component.html',
+  styleUrls: ['./rh.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class RhComponent implements OnInit {
   oddUsers: User[];
@@ -18,28 +18,27 @@ export class RhComponent implements OnInit {
   }
 
   ngOnInit(): void {
-        this.createChart();
-    }
+    this.createChart();
+  }
   addUser(list: User[], newUser: string) {
     this.userService.addUser(list, newUser);
   }
-  createChart(){
+  createChart() {
     const data = [
       { users: 'Workers', count: this.oddUsers.length },
       { users: 'Boss', count: this.evenUsers.length },
     ];
-    this.chart = new ChartJs.Chart("MyChart",
-    {
+    this.chart = new ChartJs.Chart('MyChart', {
       type: 'bar',
-        data: {
-          labels: data.map(row => row.users),
+      data: {
+        labels: data.map((row) => row.users),
         datasets: [
-        {
-          label: 'Entreprise stats',
-          data: data.map(row => row.count)
-        }
-      ]
-    }
+          {
+            label: 'Entreprise stats',
+            data: data.map((row) => row.count),
+          },
+        ],
+      },
     });
   }
 }

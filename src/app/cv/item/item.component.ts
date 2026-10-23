@@ -1,13 +1,13 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core";
-import { Cv } from "../model/cv";
-import { CvService } from "../services/cv.service";
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Cv } from '../model/cv';
+import { CvService } from '../services/cv.service';
 
 @Component({
-    selector: "app-item",
-    templateUrl: "./item.component.html",
-    styleUrls: ["./item.component.css"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-item',
+  templateUrl: './item.component.html',
+  styleUrls: ['./item.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class ItemComponent {
   @Input({ required: true }) cv!: Cv;

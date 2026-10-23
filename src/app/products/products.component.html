@@ -1,17 +1,14 @@
-@if ((products$ | async); as productsList) {
-  <button class="btn btn-primary"> More Products</button>
-  <div class="alert alert-warning">
-    Product Number: {{productsList?.length}}
-  </div>
+@if (products$ | async; as productsList) {
+  <button class="btn btn-primary">More Products</button>
+  <div class="alert alert-warning">Product Number: {{ productsList?.length }}</div>
   <div class="row">
     @for (product of productsList; track product) {
       <div class="col-4">
-        <img class="rounded-circle" src="{{product.thumbnail}}" width="150px" height="150px">
-        {{product.title}}
+        <img class="rounded-circle" src="{{ product.thumbnail }}" width="150px" height="150px" />
+        {{ product.title }}
       </div>
     }
   </div>
 } @else {
   Loading...
 }
-

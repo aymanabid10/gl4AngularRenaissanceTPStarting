@@ -8,7 +8,7 @@ describe('AutocompleteComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AutocompleteComponent]
+      declarations: [AutocompleteComponent],
     });
     fixture = TestBed.createComponent(AutocompleteComponent);
     component = fixture.componentInstance;

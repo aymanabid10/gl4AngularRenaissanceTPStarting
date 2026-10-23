@@ -8,9 +8,8 @@ describe('NgstyleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NgstyleComponent ]
-    })
-    .compileComponents();
+      declarations: [NgstyleComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(NgstyleComponent);
     component = fixture.componentInstance;

@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ColorUtComponent } from "./color-ut.component";
+import { ColorUtComponent } from './color-ut.component';
 
-fdescribe("ColorUtComponent", () => {
+fdescribe('ColorUtComponent', () => {
   let component: ColorUtComponent;
   let fixture: ComponentFixture<ColorUtComponent>;
   beforeEach(async () => {
@@ -15,7 +15,7 @@ fdescribe("ColorUtComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

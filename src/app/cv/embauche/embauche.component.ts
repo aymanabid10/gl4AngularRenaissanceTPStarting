@@ -3,11 +3,11 @@ import { EmbaucheService } from '../services/embauche.service';
 import { Cv } from '../model/cv';
 
 @Component({
-    selector: 'app-embauche',
-    templateUrl: './embauche.component.html',
-    styleUrls: ['./embauche.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-embauche',
+  templateUrl: './embauche.component.html',
+  styleUrls: ['./embauche.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class EmbaucheComponent {
   public embauchees: Cv[] = [];

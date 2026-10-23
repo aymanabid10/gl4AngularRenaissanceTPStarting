@@ -3,12 +3,12 @@ import { Todo } from '../model/todo';
 import { TodoService } from '../service/todo.service';
 
 @Component({
-    selector: 'app-todo',
-    templateUrl: './todo.component.html',
-    styleUrls: ['./todo.component.css'],
-    providers: [TodoService],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-todo',
+  templateUrl: './todo.component.html',
+  styleUrls: ['./todo.component.css'],
+  providers: [TodoService],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class TodoComponent {
   todos: Todo[] = [];

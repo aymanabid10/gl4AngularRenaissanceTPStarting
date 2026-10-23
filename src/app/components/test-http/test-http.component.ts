@@ -10,19 +10,17 @@ export interface TodoModel {
 }
 
 @Component({
-    selector: 'app-test-http',
-    templateUrl: './test-http.component.html',
-    styleUrls: ['./test-http.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: 'app-test-http',
+  templateUrl: './test-http.component.html',
+  styleUrls: ['./test-http.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class TestHttpComponent {
   todos: TodoModel[] = [];
   todos$: Observable<TodoModel[]>;
   constructor(private http: HttpClient) {
-    this.todos$ = this.http.get<TodoModel[]>(
-      'https://jsonplaceholder.typicode.com/todos'
-    );
+    this.todos$ = this.http.get<TodoModel[]>('https://jsonplaceholder.typicode.com/todos');
     /* this.http
       .get<TodoModel[]>('https://jsonplaceholder.typicode.com/todos')
       .subscribe({

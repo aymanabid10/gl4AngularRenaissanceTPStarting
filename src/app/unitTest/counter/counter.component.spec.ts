@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { CounterComponent } from "./counter.component";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CounterComponent } from './counter.component';
 
-fdescribe("CounterComponent", () => {
+fdescribe('CounterComponent', () => {
   let component: CounterComponent;
   let fixture: ComponentFixture<CounterComponent>;
   beforeEach(async () => {
@@ -13,7 +13,7 @@ fdescribe("CounterComponent", () => {
     fixture.detectChanges();
   });
 
-  it("CounterComponent exist", () => {
+  it('CounterComponent exist', () => {
     expect(component).toBeTruthy();
   });
 });
