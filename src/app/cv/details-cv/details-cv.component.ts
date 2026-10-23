@@ -49,16 +49,22 @@ export class DetailsCvComponent {
   // deleteCv keeps a manual subscribe on purpose: it is a one-shot user action with no value to
   // bind to the template, and the HTTP observable completes on its own (nothing to unsubscribe).
   deleteCv(cv: Cv) {
-    this.cvService.deleteCvById(cv.id).subscribe({
-      next: () => {
+    // PROBLEM: the error was handled in a subscribe error callback, unlike the rest of this
+    // component, so the stream itself could still error.
+    // → FIX: catchError in the pipe shows the toast and returns EMPTY; subscribe only sees success.
+    this.cvService
+      .deleteCvById(cv.id)
+      .pipe(
+        catchError(() => {
+          this.toastr.error(
+            `Problème avec le serveur veuillez contacter l'admin`
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
         this.toastr.success(`${cv.name} supprimé avec succès`);
         this.router.navigate([APP_ROUTES.cv]);
-      },
-      error: () => {
-        this.toastr.error(
-          `Problème avec le serveur veuillez contacter l'admin`
-        );
-      },
-    });
+      });
   }
 }
