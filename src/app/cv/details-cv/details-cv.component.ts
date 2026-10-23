@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Cv } from '../model/cv';
 import { CvService } from '../services/cv.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, map, switchMap } from 'rxjs';
+import { EMPTY, Observable, catchError, map, switchMap } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { APP_ROUTES } from '../../../config/routes.config';
 import { AuthService } from '../../auth/services/auth.service';
@@ -30,7 +30,19 @@ export class DetailsCvComponent {
   ) {
     this.cv$ = this.activatedRoute.paramMap.pipe(
       map((params) => Number(params.get('id'))),
-      switchMap((id) => this.cvService.getCvById(id))
+      // PROBLEM: the error callback swallowed the error (unused `e`) and redirected silently.
+      // → FIX: catchError sits inside switchMap so a failing id ends only that inner request and
+      // the paramMap stream stays alive; the user gets a toast, then is sent back to the list.
+      // EMPTY completes without emitting, so the template simply renders nothing.
+      switchMap((id) =>
+        this.cvService.getCvById(id).pipe(
+          catchError(() => {
+            this.toastr.error(`Ce CV est introuvable ou le serveur est indisponible`);
+            this.router.navigate([APP_ROUTES.cv]);
+            return EMPTY;
+          })
+        )
+      )
     );
   }
 
