@@ -8,7 +8,7 @@ import { DefaultImagePipe } from "../pipes/default-image.pipe";
     selector: "app-item",
     templateUrl: "./item.component.html",
     styleUrls: ["./item.component.css"],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgStyle, DefaultImagePipe]
 })
 export class ItemComponent {

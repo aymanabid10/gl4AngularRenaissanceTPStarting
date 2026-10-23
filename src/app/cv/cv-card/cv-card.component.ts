@@ -9,7 +9,7 @@ import { DefaultImagePipe } from '../pipes/default-image.pipe';
     selector: 'app-cv-card',
     templateUrl: './cv-card.component.html',
     styleUrls: ['./cv-card.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [RouterLink, DefaultImagePipe]
 })
 export class CvCardComponent {

@@ -7,7 +7,7 @@ import { ItemComponent } from "../item/item.component";
     selector: "app-list",
     templateUrl: "./list.component.html",
     styleUrls: ["./list.component.css"],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgClass, ItemComponent]
 })
 export class ListComponent {

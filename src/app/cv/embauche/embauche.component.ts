@@ -6,7 +6,7 @@ import { ItemComponent } from '../item/item.component';
     selector: 'app-embauche',
     templateUrl: './embauche.component.html',
     styleUrls: ['./embauche.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ItemComponent]
 })
 export class EmbaucheComponent {

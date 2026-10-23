@@ -12,7 +12,7 @@ import { catchError, of } from "rxjs";
     selector: "app-cv",
     templateUrl: "./cv.component.html",
     styleUrls: ["./cv.component.css"],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ListComponent, CvCardComponent, EmbaucheComponent, UpperCasePipe, DatePipe]
 })
 export class CvComponent {

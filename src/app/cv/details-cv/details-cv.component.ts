@@ -12,7 +12,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
     selector: 'app-details-cv',
     templateUrl: './details-cv.component.html',
     styleUrls: ['./details-cv.component.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [DefaultImagePipe]
 })
 export class DetailsCvComponent{
