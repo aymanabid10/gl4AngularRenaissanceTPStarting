@@ -2,12 +2,11 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { Todo, TodoStatus } from '../model/todo';
 import { LoggerService } from '../../services/logger.service';
 
-let n = 3;
-
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
+  private n : number = 3
   private loggerService = inject(LoggerService);
 
   readonly todos = signal<Todo[]>([
@@ -17,15 +16,15 @@ export class TodoService {
   ]);
 
   readonly waitingTodos = computed(() =>
-    this.todos().filter((todo) => todo.status === 'waiting')
+    this.searchTodoByStatus('waiting')
   );
 
   readonly inProgressTodos = computed(() =>
-    this.todos().filter((todo) => todo.status === 'in progress')
+    this.searchTodoByStatus('in progress')
   );
 
   readonly doneTodos = computed(() =>
-    this.todos().filter((todo) => todo.status === 'done')
+    this.searchTodoByStatus('done')
   );
 
   /** Inserted by Angular inject() migration for backwards compatibility */
@@ -42,13 +41,20 @@ export class TodoService {
   }
 
   /**
+   * recherche de TODO en utilisant le status
+   */
+  searchTodoByStatus(status: TodoStatus): Todo[] {
+    return this.todos().filter((t) => t.status === status);
+  }
+
+  /**
    *Elle permet d'ajouter un todo
    *
    * @param todo: Todo
    *
    */
   addTodo(todo: Todo): void {
-    const newId = todo.id ? todo.id : ++n;
+    const newId = todo.id ? todo.id : ++this.n;
     const newTodo = new Todo(
       newId,
       todo.name,

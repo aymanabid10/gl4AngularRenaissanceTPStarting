@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.css'],
   providers: [TodoService],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule],
 })
 export class TodoComponent {
