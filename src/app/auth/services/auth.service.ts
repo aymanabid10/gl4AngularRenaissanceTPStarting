@@ -1,72 +1,88 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { CredentialsDto } from '../dto/credentials.dto';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import { HttpClient } from '@angular/common/http';
 import { API } from '../../../config/api.config';
 import { Observable, tap } from 'rxjs';
 import { UserDto } from '../dto/user.dto';
+import { StateManagementService } from '../../services/state-management.service';
+import { AuthSession } from '../dto/auth-session.dto';
+
+// hetha teba3 state management 
+const AUTH_STORAGE_KEY = 'auth_session';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private http = inject(HttpClient);
+  private _session = signal<AuthSession | null>(null);
+
+  readonly session = this._session.asReadonly();
+
+  // User info (id, email) déduit de la session
+  readonly user = computed<UserDto | null>(() => {
+    const session = this._session();
+    if (!session) return null;
+    return {
+      id: session.userId,
+      email: session.email,
+    };
+  });
+
+  // Access token / id pour l'intercepteur et autres services
+  readonly token = computed(() => this._session()?.id ?? null);
 
 
-  // hetha l user record bich trackiw garder la trace (id ,email)
-  private _user = signal<UserDto | null>(null)
-  // hetha  token mawjoud fi  local  storage nfetchiwoh bich nchoufouh  authenticated wala le 
-  private _token = signal<string | null>(null)
 
+  // Vérification de validité de session : expirationDate = created + ttl > current_date
+  readonly isAuthenticated = computed(() => {
+    const session = this._session();
+    if (!session?.id || !session?.expirationDate) {
+      return false;
+    }
+    return Date.now() < session.expirationDate;
+  });
 
-  readonly user = this._user.asReadonly();
-  readonly token = this._token.asReadonly();
+  constructor(
+    private readonly http: HttpClient,
+    private readonly stateManagement: StateManagementService
+  ) {}
 
-  // is authenticated nkhawloha computed khaterha derived mil  signal token (derived state)
-  readonly isAuthenticated = computed(() => !!this._token());
+  init(): void {
+    const savedSession = this.stateManagement.getState<AuthSession>(AUTH_STORAGE_KEY);
 
-  constructor() {
-    // kol  creation  tfetchi  state taa user
-    this.loadStateFromLocalStorage();
-  }
-  private loadStateFromLocalStorage() {
-    const token = localStorage.getItem('token')
-    const user = localStorage.getItem('user')
-    if (token && user) {
-      try {
-        this._token.set(token);
-        this._user.set(JSON.parse(user));
-      } catch {
-        this.logout(); // khater ken il  parsing function tfaili il app tnajem  ticrashi 
+    if (savedSession && savedSession.id && savedSession.expirationDate) {
+      if (Date.now() >= savedSession.expirationDate) {
+        this.logout();
+        return;
       }
-    }
-    else
-    {
-      this.logout()
+      this._session.set(savedSession);
+    } else {
+      this.logout();
     }
   }
+
   login(credentials: CredentialsDto): Observable<LoginResponseDto> {
     return this.http.post<LoginResponseDto>(API.login, credentials).pipe(
-      // sta3malna tap khater token w user jaw mil backend fi response u lauthservice lezem yitupdata  kbal  mil response tousel li login compoenent khatrou  howa li yithokm fil  UI
-      tap(
-        (response) => {
-          const user: UserDto = {
-            id: response.userId,
-            email: credentials.email
-          }
-          this._token.set(response.id)
-          this._user.set({ id: user.id, email: user.email })
-          localStorage.setItem('token', response.id)
-          localStorage.setItem('user', JSON.stringify(user))
-        }
-      )
+      tap((response) => {
+        // ttl (converti en millisecondes)
+        const expirationDate = new Date(response.created).getTime() + (response.ttl * 1000);
+
+        // sajil l response  + expirationDate + email
+        const session: AuthSession = {
+          ...response,
+          expirationDate,
+          email: credentials.email,
+        };
+
+        this._session.set(session);
+        this.stateManagement.persist(AUTH_STORAGE_KEY, session);
+      })
     );
   }
 
   logout() {
-    this._token.set(null)
-    localStorage.removeItem('token');
-    this._user.set(null)
-    localStorage.removeItem('user')
+    this._session.set(null);
+    this.stateManagement.clear(AUTH_STORAGE_KEY);
   }
 }
