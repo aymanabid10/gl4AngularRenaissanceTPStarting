@@ -1,5 +1,13 @@
 allowBuilds:
+  '@parcel/watcher': true
   esbuild: true
   lmdb: true
   msgpackr-extract: true
   nice-napi: true
+minimumReleaseAgeExclude:
+  - '@angular-devkit/architect@0.2003.41'
+  - '@angular-devkit/core@20.3.41'
+  - '@angular-devkit/schematics@20.3.41'
+  - '@angular/build@20.3.41'
+  - '@angular/cli@20.3.41'
+  - '@schematics/angular@20.3.41'
