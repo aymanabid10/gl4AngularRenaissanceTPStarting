@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, OnInit, ChangeDetectionStrategy, inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 @Component({
@@ -8,6 +8,8 @@ import { ActivatedRoute } from "@angular/router";
     changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ColorComponent implements OnInit {
+  private activatedRoute = inject(ActivatedRoute);
+
   @Input() defaultColor = "red";
 
   /**
@@ -16,13 +18,16 @@ export class ColorComponent implements OnInit {
    */
   divColor = "";
 
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
   /**
    * It change the div backgound color
    *
    * @param newColor: string
    */
 
-  constructor(private activatedRoute: ActivatedRoute) {
+  constructor() {
     console.log("In constructor", this.defaultColor);
   }
 
