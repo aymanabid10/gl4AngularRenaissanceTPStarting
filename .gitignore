@@ -11,8 +11,24 @@
 npm-debug.log
 yarn-error.log
 
+# pnpm (the project uses npm)
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
 # Visual Studio Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
 .history/*
 
 # Miscellaneous
@@ -23,9 +39,11 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+__screenshots__/
+
+# Environment files
+.env*
 
 # System files
 .DS_Store
 Thumbs.db
-
-pnpm-lock.yaml
