@@ -25,4 +25,20 @@ describe('TtcComponent', () => {
     expect(component.quantite()).toBe(1);
     expect(component.tva()).toBe(18);
   });
+
+  it('should compute the unit and total ttc prices', () => {
+    component.prixHt.set(100);
+    component.quantite.set(3);
+
+    expect(component.prixUnitaireTtc()).toBeCloseTo(118);
+    expect(component.totalTtc()).toBeCloseTo(354);
+  });
+
+  it('should update the prices when the vat changes', () => {
+    component.prixHt.set(100);
+    component.tva.set(7);
+
+    expect(component.prixUnitaireTtc()).toBeCloseTo(107);
+    expect(component.totalTtc()).toBeCloseTo(107);
+  });
 });
