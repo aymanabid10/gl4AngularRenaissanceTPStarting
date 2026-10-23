@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Todo } from '../model/todo';
 import { TodoService } from '../service/todo.service';
 
 @Component({
-  selector: 'app-todo',
-  templateUrl: './todo.component.html',
-  styleUrls: ['./todo.component.css'],
-  providers: [TodoService],
+    selector: 'app-todo',
+    templateUrl: './todo.component.html',
+    styleUrls: ['./todo.component.css'],
+    providers: [TodoService],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: false
 })
 export class TodoComponent {
   todos: Todo[] = [];
