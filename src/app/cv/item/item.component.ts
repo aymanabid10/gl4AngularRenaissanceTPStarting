@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, inject } from "@angular/core";
+import { Component, ChangeDetectionStrategy, inject, input } from "@angular/core";
 import { Cv } from "../model/cv";
 import { CvService } from "../services/cv.service";
 import { NgStyle } from "@angular/common";
@@ -14,14 +14,10 @@ import { DefaultImagePipe } from "../pipes/default-image.pipe";
 export class ItemComponent {
   private cvService = inject(CvService);
 
-  @Input({ required: true }) cv!: Cv;
-  @Input() size = 50;
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-  constructor() {}
+  cv = input.required<Cv>();
+  size = input(50);
 
   onSelectCv() {
-    this.cvService.selectCv(this.cv);
+    this.cvService.selectCv(this.cv());
   }
 }
