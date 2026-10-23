@@ -20,8 +20,7 @@ export class CvComponent {
   private cvService = inject(CvService);
 
   cvs: Cv[] = [];
-  selectedCv: Cv | null = null;
-  /*   selectedCv: Cv | null = null; */
+  selectedCv = this.cvService.selectedCv;
   date = new Date();
 
   /** Inserted by Angular inject() migration for backwards compatibility */
@@ -41,6 +40,5 @@ export class CvComponent {
     });
     this.logger.logger("je suis le cvComponent");
     this.toastr.info("Bienvenu dans notre CvTech");
-    this.cvService.selectCv$.subscribe((cv) => (this.selectedCv = cv));
   }
 }
