@@ -16,10 +16,6 @@ export class CvComponent implements OnInit {
   // selectCv$ subscription was never released (root-provided Subject → leak).
   // → FIX: expose cold streams; the template's async pipe subscribes on view creation,
   // unsubscribes on destroy and marks the view for check on each emission.
-  cvs$: Observable<Cv[]>;
-  selectedCv$: Observable<Cv>;
-  date = new Date();
-
   constructor(
     private logger: LoggerService,
     private toastr: ToastrService,
@@ -31,7 +27,9 @@ export class CvComponent implements OnInit {
     // the stream, so the pipeline could not be composed or reused.
     // → FIX: catchError swaps the failed request for a fallback stream, keeping cvs$ a plain
     // Observable<Cv[]> that never errors for the template.
-    this.cvs$ = this.cvService.getCvs().pipe(
+    
+  }
+  cvs$= this.cvService.getCvs().pipe(
       catchError(() => {
         this.toastr.error(`
           Attention!! Les données sont fictives, problème avec le serveur.
@@ -39,8 +37,10 @@ export class CvComponent implements OnInit {
         return of(this.cvService.getFakeCvs());
       })
     );
-    this.selectedCv$ = this.cvService.selectCv$;
-  }
+  selectedCv$ = this.cvService.selectCv$;
+  date = new Date();
+
+
 
   ngOnInit(): void {
     // One-shot UI side effects live in ngOnInit rather than tap() on a stream: tap() would
