@@ -1,10 +1,8 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { LoggerService } from './logger.service';
 
 // tinstancih mara barka zeyed 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class StateManagementService {
   private logger = inject(LoggerService);
 
