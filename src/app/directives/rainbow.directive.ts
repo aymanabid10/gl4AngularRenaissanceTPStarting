@@ -1,7 +1,7 @@
 import { Directive, signal } from '@angular/core';
 
 @Directive({
-  selector: 'input[appRainbow]',
+  selector: 'input[appRainbow][type="text"]',
   host: {
     '[style.color]': 'color()',
     '[style.borderColor]': 'color()',

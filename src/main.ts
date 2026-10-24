@@ -1,5 +1,4 @@
-import { provideZoneChangeDetection, isDevMode, importProvidersFrom, APP_INITIALIZER } from "@angular/core";
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { isDevMode, importProvidersFrom, APP_INITIALIZER } from "@angular/core";
 
 
 import { AuthInterceptorProvider } from "./app/auth/interceptors/auth.interceptor";
