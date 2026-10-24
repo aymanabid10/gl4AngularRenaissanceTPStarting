@@ -13,7 +13,6 @@ import { CvComponent } from "./cv/cv/cv.component";
 import { DetailsCvComponent } from "./cv/details-cv/details-cv.component";
 import { RhComponent } from "./optimizationPattern/rh/rh.component";
 import { NgclassComponent } from "./directives/ngclass/ngclass.component";
-import { TtcComponent } from "./ttc/ttc/ttc.component";
 
 const routes: Route[] = [
   { path: "login", component: LoginComponent },
@@ -29,7 +28,6 @@ const routes: Route[] = [
     component: FrontComponent,
     children: [
       { path: "todo", component: TodoComponent },
-      { path: "ttc", component: TtcComponent },
       { path: "word", component: MiniWordComponent },
       { path: "ngclass", component: NgclassComponent },
     ],
