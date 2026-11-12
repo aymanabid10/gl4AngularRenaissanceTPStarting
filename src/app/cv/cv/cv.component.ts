@@ -1,15 +1,21 @@
 import { Component, ChangeDetectionStrategy, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { Observable, catchError, of } from "rxjs";
 import { Cv } from "../model/cv";
 import { LoggerService } from "../../services/logger.service";
 import { ToastrService } from "ngx-toastr";
 import { CvService } from "../services/cv.service";
+import { ListComponent } from "../list/list.component";
+import { CvCardComponent } from "../cv-card/cv-card.component";
+import { EmbaucheComponent } from "../embauche/embauche.component";
+
 @Component({
-    selector: "app-cv",
-    templateUrl: "./cv.component.html",
-    styleUrls: ["./cv.component.css"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+  selector: "app-cv",
+  templateUrl: "./cv.component.html",
+  styleUrls: ["./cv.component.css"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [CommonModule, ListComponent, CvCardComponent, EmbaucheComponent],
+  standalone: true,
 })
 export class CvComponent implements OnInit {
   // PROBLEM: cvs/selectedCv were plain fields written from subscribe callbacks, and the
