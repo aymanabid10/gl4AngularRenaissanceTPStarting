@@ -1,10 +1,9 @@
-import { NgModule, isDevMode } from "@angular/core";
+import { NgModule, isDevMode, provideZoneChangeDetection } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
   provideHttpClient,
-  withInterceptorsFromDi,
+  withInterceptors,
   withXhr
 } from "@angular/common/http";
 
@@ -41,7 +40,7 @@ import { TestFormComponent } from "./components/test-form/test-form.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { TestObservableComponent } from "./rxjs/test-observable/test-observable.component";
 import { TestHttpComponent } from "./components/test-http/test-http.component";
-import { AuthInterceptorProvider } from "./auth/interceptors/auth.interceptor";
+import { authInterceptor } from "./auth/interceptors/auth.interceptor";
 import { ListComponent } from "./cv/list/list.component";
 import { ItemComponent } from "./cv/item/item.component";
 import { DefaultImagePipe } from "./cv/pipes/default-image.pipe";
@@ -98,7 +97,6 @@ import { SliderComponent } from "./rxjs/slider/slider.component";
   imports: [
     BrowserModule,
     FormsModule,
-    BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(), // ToastrModule added
     AppRoutingModule,
     ReactiveFormsModule,
@@ -110,8 +108,8 @@ import { SliderComponent } from "./rxjs/slider/slider.component";
     }),
   ],
   providers: [
-    AuthInterceptorProvider,
-    provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    provideZoneChangeDetection(),
+    provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
   ],
 })
 export class AppModule {}
