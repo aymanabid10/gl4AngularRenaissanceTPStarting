@@ -18,20 +18,18 @@ import { rxResource } from '@angular/core/rxjs-interop';
 export class DetailsCvComponent{
   private cvService = inject(CvService);
   private router = inject(Router);
-  id = input.required<string>();
   private toastr = inject(ToastrService);
   authService = inject(AuthService);
+  id = input.required<string>();
   cvResource = rxResource({
     params: () => +this.id(),
     stream: ({ params: id }) => this.cvService.getCvById(id),
   });
-  constructor() {
-    effect(() => {
+  errorHandlingEffect = effect(() => {
       if (this.cvResource.error()) {
         this.router.navigate([APP_ROUTES.cv]);
       }
     });
-  }
 
   deleteCv(cv: Cv) {
     this.cvService.deleteCvById(cv.id).subscribe({
