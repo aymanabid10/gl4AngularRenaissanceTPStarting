@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
-import { RouterModule, Route, PreloadAllModules } from "@angular/router";
+import { RouterModule, Route } from "@angular/router";
+import { SelectivePreloadingStrategy } from "./services/selective-preloading-strategy";
 import { LoginComponent } from "./auth/login/login.component";
 import { NF404Component } from "./components/nf404/nf404.component";
 import { FrontComponent } from "./templates/front/front.component";
@@ -15,6 +16,7 @@ const routes: Route[] = [
   {
     path: "cv",
     loadChildren: () => import("./cv/cv.module").then((m) => m.CvModule),
+    data: { preload: true },
   },
   {
     path: "",
@@ -24,6 +26,7 @@ const routes: Route[] = [
         path: "todo",
         loadChildren: () =>
           import("./todo/todo.module").then((m) => m.TodoModule),
+        data: { preload: true },
       },
       { path: "word", component: MiniWordComponent },
       { path: "ngclass", component: NgclassComponent },
@@ -40,7 +43,7 @@ const routes: Route[] = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      preloadingStrategy: PreloadAllModules,
+      preloadingStrategy: SelectivePreloadingStrategy,
     }),
   ],
   exports: [RouterModule],
