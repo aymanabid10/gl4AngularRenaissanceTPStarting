@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Cv } from "../model/cv";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, tap } from "rxjs";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { API } from "../../../config/api.config";
+import { withHttpCache } from "../../interceptors/http-cache.context";
+import { HttpCacheService } from "../../services/http-cache.service";
 
 @Injectable({
   providedIn: "root",
@@ -17,7 +19,10 @@ export class CvService {
    * Le flux des cvs sélectionnés
    */
   selectCv$ = this.#selectCvSuject$.asObservable();
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private httpCache: HttpCacheService
+  ) {
     this.cvs = [
       new Cv(1, "aymen", "sellaouti", "teacher", "as.jpg", "1234", 40),
       new Cv(2, "skander", "sellaouti", "enfant", "       ", "1234", 4),
@@ -43,7 +48,7 @@ export class CvService {
    *
    */
   getCvs(): Observable<Cv[]> {
-    return this.http.get<Cv[]>(API.cv);
+    return this.http.get<Cv[]>(API.cv, { context: withHttpCache() });
   }
 
   /**
@@ -55,11 +60,21 @@ export class CvService {
    *
    */
   deleteCvById(id: number): Observable<any> {
-    return this.http.delete<any>(API.cv + id);
+    return this.http.delete<any>(API.cv + id).pipe(tap(() => this.invalidateCvCache()));
   }
 
   addCv(cv: Cv): Observable<Cv> {
-    return this.http.post<any>(API.cv, cv);
+    return this.http.post<any>(API.cv, cv).pipe(tap(() => this.invalidateCvCache()));
+  }
+
+  /**
+   * PROBLEM: the 1 min HTTP cache would keep serving the previous list/detail after an add or a
+   * delete, so the master list could still show a removed cv.
+   * → FIX: any write drops the cached responses; the next read goes back to the network.
+   * HttpCacheService has no per-url eviction, so the whole cache is cleared.
+   */
+  private invalidateCvCache(): void {
+    this.httpCache.clear();
   }
 
   /**
@@ -71,7 +86,7 @@ export class CvService {
    *
    */
   getCvById(id: number): Observable<Cv> {
-    return this.http.get<Cv>(API.cv + id);
+    return this.http.get<Cv>(API.cv + id, { context: withHttpCache() });
   }
 
   /**
