@@ -28,6 +28,13 @@ const routes: Route[] = [
     path: "",
     component: FrontComponent,
     children: [
+      {
+        path: "product-filter",
+        loadComponent: () =>
+          import("./tp2/products-filter/products-filter.component").then(
+            (m) => m.ProductsFilterComponent
+          ),
+      },
       { path: "todo", component: TodoComponent },
       { path: "ttc", component: TtcComponent },
       { path: "word", component: MiniWordComponent },
