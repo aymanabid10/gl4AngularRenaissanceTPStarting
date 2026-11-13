@@ -30,5 +30,9 @@ export class AutocompleteComponent {
     defaultValue: [],
   });
 
-  readonly selectedCv = this.cvService.selectedCv;
+  readonly selectedCv = computed(() => {
+    const selected = this.cvService.selectedCv();
+    const results = this.cvs.hasValue() ? this.cvs.value() : [];
+    return results.some((cv) => cv.id === selected?.id) ? selected : null;
+  });
 }
