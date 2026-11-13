@@ -1,18 +1,12 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Route } from "@angular/router";
-import { TodoComponent } from "./todo/todo/todo.component";
-import { MiniWordComponent } from "./directives/mini-word/mini-word.component";
-import { ColorComponent } from "./components/color/color.component";
-import { FrontComponent } from "./templates/front/front.component";
-import { AdminComponent } from "./templates/admin/admin.component";
+import { SelectivePreloadingStrategy } from "./services/selective-preloading-strategy";
 import { LoginComponent } from "./auth/login/login.component";
 import { NF404Component } from "./components/nf404/nf404.component";
-import { authGuard } from "./auth/guards/auth.guard";
-import { AddCvComponent } from "./cv/add-cv/add-cv.component";
-import { CvComponent } from "./cv/cv/cv.component";
-import { DetailsCvComponent } from "./cv/details-cv/details-cv.component";
-import { RhComponent } from "./optimizationPattern/rh/rh.component";
+import { FrontComponent } from "./templates/front/front.component";
+import { MiniWordComponent } from "./directives/mini-word/mini-word.component";
 import { NgclassComponent } from "./directives/ngclass/ngclass.component";
+import { RhComponent } from "./optimizationPattern/rh/rh.component";
 import { ProductsComponent } from "./products/products.component";
 
 const routes: Route[] = [
@@ -21,29 +15,36 @@ const routes: Route[] = [
   { path: "products", component: ProductsComponent },
   {
     path: "cv",
-    component: CvComponent,
+    loadChildren: () => import("./cv/cv.module").then((m) => m.CvModule),
+    data: { preload: true },
   },
-  { path: "cv/add", component: AddCvComponent, canActivate: [authGuard] },
-  { path: "cv/:id", component: DetailsCvComponent },
   {
     path: "",
     component: FrontComponent,
     children: [
-      { path: "todo", component: TodoComponent },
+      {
+        path: "todo",
+        loadChildren: () =>
+          import("./todo/todo.module").then((m) => m.TodoModule),
+      },
       { path: "word", component: MiniWordComponent },
       { path: "ngclass", component: NgclassComponent },
     ],
   },
   {
     path: "admin",
-    component: AdminComponent,
-    children: [{ path: "color", component: ColorComponent }],
+    loadChildren: () =>
+      import("./templates/admin.module").then((m) => m.AdminModule),
   },
   { path: "**", component: NF404Component },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      preloadingStrategy: SelectivePreloadingStrategy,
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
