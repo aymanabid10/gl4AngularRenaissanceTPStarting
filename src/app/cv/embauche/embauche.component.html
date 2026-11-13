@@ -1,4 +1,5 @@
-@if (embauchees.length) {
+@let embauchees = embauchees$ | async;
+@if (embauchees?.length) {
   <div class="alert alert-secondary mt-2">
     Liste des cv pré embauchées:
     <div class="embauchee row">

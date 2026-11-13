@@ -13,7 +13,7 @@ import { EmbaucheComponent } from "../embauche/embauche.component";
   selector: "app-cv",
   templateUrl: "./cv.component.html",
   styleUrls: ["./cv.component.css"],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ListComponent, CvCardComponent, EmbaucheComponent],
   standalone: true,
 })
@@ -33,20 +33,18 @@ export class CvComponent implements OnInit {
     // the stream, so the pipeline could not be composed or reused.
     // → FIX: catchError swaps the failed request for a fallback stream, keeping cvs$ a plain
     // Observable<Cv[]> that never errors for the template.
-    
   }
-  cvs$= this.cvService.getCvs().pipe(
-      catchError(() => {
-        this.toastr.error(`
-          Attention!! Les données sont fictives, problème avec le serveur.
-          Veuillez contacter l'admin.`);
-        return of(this.cvService.getFakeCvs());
-      })
-    );
+
+  cvs$ = this.cvService.getCvs().pipe(
+    catchError(() => {
+      this.toastr.error(`
+        Attention!! Les données sont fictives, problème avec le serveur.
+        Veuillez contacter l'admin.`);
+      return of(this.cvService.getFakeCvs());
+    })
+  );
   selectedCv$ = this.cvService.selectCv$;
   date = new Date();
-
-
 
   ngOnInit(): void {
     // One-shot UI side effects live in ngOnInit rather than tap() on a stream: tap() would

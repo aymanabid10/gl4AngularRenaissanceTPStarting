@@ -7,7 +7,7 @@ import { TodoService } from '../service/todo.service';
     templateUrl: './todo.component.html',
     styleUrls: ['./todo.component.css'],
     providers: [TodoService],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
 })
 export class TodoComponent {

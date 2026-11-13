@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { Cv } from '../model/cv';
 
 @Injectable({
@@ -6,31 +7,19 @@ import { Cv } from '../model/cv';
 })
 export class EmbaucheService {
   private embauchees: Cv[] = [];
+  #embauchees$ = new BehaviorSubject<Cv[]>([]);
+  embauchees$ = this.#embauchees$.asObservable();
 
   constructor() {}
 
-  /**
-   *
-   * Retourne la liste des embauchees
-   *
-   * @returns CV[]
-   *
-   */
   getEmbauchees(): Cv[] {
     return this.embauchees;
   }
 
-  /**
-   *
-   * Embauche une personne si elle ne l'est pas encore
-   * Sinon il retourne false
-   *
-   * @param cv : Cv
-   * @returns boolean
-   */
   embauche(cv: Cv): boolean {
     if (this.embauchees.indexOf(cv) == -1) {
       this.embauchees.push(cv);
+      this.#embauchees$.next(this.embauchees);
       return true;
     }
     return false;

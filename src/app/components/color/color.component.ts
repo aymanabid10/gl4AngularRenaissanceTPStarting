@@ -5,7 +5,7 @@ import { ActivatedRoute } from "@angular/router";
     selector: "app-color",
     templateUrl: "./color.component.html",
     styleUrls: ["./color.component.css"],
-    changeDetection: ChangeDetectionStrategy.Eager,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
 })
 export class ColorComponent implements OnInit {
