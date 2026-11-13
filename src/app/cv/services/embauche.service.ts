@@ -1,25 +1,18 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { Cv } from '../model/cv';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmbaucheService {
-  private embauchees: Cv[] = [];
-  #embauchees$ = new BehaviorSubject<Cv[]>([]);
-  embauchees$ = this.#embauchees$.asObservable();
+  #embauchees = signal<Cv[]>([]);
+  embauchees = this.#embauchees.asReadonly();
 
   constructor() {}
 
-  getEmbauchees(): Cv[] {
-    return this.embauchees;
-  }
-
   embauche(cv: Cv): boolean {
-    if (this.embauchees.indexOf(cv) == -1) {
-      this.embauchees.push(cv);
-      this.#embauchees$.next(this.embauchees);
+    if (!this.#embauchees().includes(cv)) {
+      this.#embauchees.update((list) => [...list, cv]);
       return true;
     }
     return false;
