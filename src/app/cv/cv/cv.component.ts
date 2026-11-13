@@ -1,10 +1,16 @@
-import { Component, ChangeDetectionStrategy, OnInit } from "@angular/core";
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnInit,
+  computed,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Observable, catchError, of } from "rxjs";
 import { Cv } from "../model/cv";
 import { LoggerService } from "../../services/logger.service";
 import { ToastrService } from "ngx-toastr";
 import { CvService } from "../services/cv.service";
+import { EmbaucheService } from "../services/embauche.service";
 import { ListComponent } from "../list/list.component";
 import { CvCardComponent } from "../cv-card/cv-card.component";
 import { EmbaucheComponent } from "../embauche/embauche.component";
@@ -25,7 +31,8 @@ export class CvComponent implements OnInit {
   constructor(
     private logger: LoggerService,
     private toastr: ToastrService,
-    private cvService: CvService
+    private cvService: CvService,
+    private embaucheService: EmbaucheService
   ) {
     // PROBLEM: the constructor fired the HTTP call, toasts and logging, so instantiating the
     // component (incl. in tests) had side effects. → FIX: the constructor only wires streams.
@@ -44,6 +51,9 @@ export class CvComponent implements OnInit {
     })
   );
   selectedCv$ = this.cvService.selectCv$;
+  hasEmbauche = computed(
+    () => this.embaucheService.embauchees().length > 0
+  );
   date = new Date();
 
   ngOnInit(): void {
