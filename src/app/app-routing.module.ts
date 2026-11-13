@@ -26,7 +26,6 @@ const routes: Route[] = [
         path: "todo",
         loadChildren: () =>
           import("./todo/todo.module").then((m) => m.TodoModule),
-        data: { preload: true },
       },
       { path: "word", component: MiniWordComponent },
       { path: "ngclass", component: NgclassComponent },
