@@ -14,13 +14,20 @@ import { EmbaucheService } from "../services/embauche.service";
 import { ListComponent } from "../list/list.component";
 import { CvCardComponent } from "../cv-card/cv-card.component";
 import { EmbaucheComponent } from "../embauche/embauche.component";
+import { AutocompleteComponent } from "../autocomplete/autocomplete.component";
 
 @Component({
   selector: "app-cv",
   templateUrl: "./cv.component.html",
   styleUrls: ["./cv.component.css"],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ListComponent, CvCardComponent, EmbaucheComponent],
+  imports: [
+    CommonModule,
+    ListComponent,
+    CvCardComponent,
+    EmbaucheComponent,
+    AutocompleteComponent,
+  ],
   standalone: true,
 })
 export class CvComponent implements OnInit {
