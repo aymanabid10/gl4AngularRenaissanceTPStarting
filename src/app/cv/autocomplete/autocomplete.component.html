@@ -1,3 +1,10 @@
 <form [formGroup]="form">
   <input type="text" class="form-control" formControlName="search" />
 </form>
+<div class="list-group">
+  @for (cv of cvs$ | async; track cv.id) {
+    <a class="list-group-item list-group-item-action" [routerLink]="['/cv', cv.id]">
+      <app-item [cv]="cv"></app-item>
+    </a>
+  }
+</div>

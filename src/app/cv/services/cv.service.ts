@@ -124,7 +124,7 @@ export class CvService {
   selectByName(name: string) {
     const search = `{"where":{"name":{"like":"%${name}%"}}}`;
     const params = new HttpParams().set("filter", search);
-    return this.http.get<any>(API.cv, { params });
+    return this.http.get<any>(API.cv, { params, context: withHttpCache() });
   }
   /**
    * Recherche les cvs dont la valeur est égale à la chaine passée en paramètre
