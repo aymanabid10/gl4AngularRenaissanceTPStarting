@@ -3,6 +3,9 @@ import { Cv } from "../model/cv";
 import { Observable, tap } from "rxjs";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { API } from "../../../config/api.config";
+import { withHttpCache } from "../../interceptors/http-cache.context";
+
+const SEARCH_LIMIT = 10;
 
 @Injectable({
   providedIn: "root",
@@ -114,9 +117,12 @@ export class CvService {
    * @returns cvs Cv[]
    */
   selectByName(name: string): Observable<Cv[]> {
-    const search = `{"where":{"name":{"like":"%${name}%"}}}`;
-    const params = new HttpParams().set("filter", search);
-    return this.http.get<Cv[]>(API.cv, { params });
+    const filter = JSON.stringify({
+      where: { name: { like: `%${name}%` } },
+      limit: SEARCH_LIMIT,
+    });
+    const params = new HttpParams().set("filter", filter);
+    return this.http.get<Cv[]>(API.cv, { params, context: withHttpCache() });
   }
   /**
    * Recherche les cvs dont la valeur est égale à la chaine passée en paramètre
