@@ -1,3 +1,19 @@
-<form [formGroup]="form">
-  <input type="text" class="form-control" formControlName="search" />
-</form>
+<input
+  #search
+  type="text"
+  class="form-control mb-2"
+  placeholder="Search a CV by name"
+  (input)="searchTerm.set(search.value)"
+/>
+
+@if (cvs.isLoading()) {
+  <p class="text-muted">Searching…</p>
+}
+
+@if (cvs.error()) {
+  <div class="alert alert-danger">Search failed, please try again.</div>
+} @else if (cvs.hasValue() && cvs.value().length) {
+  <app-list [cvs]="cvs.value()" />
+}
+
+<app-cv-card [cv]="selectedCv()" />
