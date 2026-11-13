@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { API } from "src/config/api.config";
 import { ProductSettings } from "../dto/product-settings.dto";
 import { ProductApiResponse } from "../dto/product-api-response.dto";
+import { withHttpCache } from "src/app/interceptors/http-cache.context";
 
 @Injectable({
   providedIn: "root",
@@ -13,6 +14,9 @@ export class ProductService {
 
   getProducts({ limit, skip }: ProductSettings): Observable<ProductApiResponse> {
     const params = new HttpParams().set("limit", limit).set("skip", skip);
-    return this.http.get<ProductApiResponse>(API.products, { params });
+    return this.http.get<ProductApiResponse>(API.products, {
+      params,
+      context: withHttpCache(),
+    });
   }
 }
