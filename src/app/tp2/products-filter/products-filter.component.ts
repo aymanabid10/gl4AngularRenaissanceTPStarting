@@ -4,11 +4,17 @@ import {
   linkedSignal,
   signal,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { PRODUCTS, ProductCategory } from './product.data';
+
+interface filters {
+  search: string;
+  category: string;
+}
 
 @Component({
   selector: 'app-products-filter',
-  imports: [],
+  imports: [FormsModule],
   standalone: true,
   templateUrl: './products-filter.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,32 +24,17 @@ export class ProductsFilterComponent {
   readonly allProducts = PRODUCTS;
   protected categories = [...new Set(PRODUCTS.map((p) => p.category))];
 
-  protected search = signal<string>('');
-  protected category = signal<string>('');
+  search = signal<string>('');
+  category = signal<string>('');
 
-  // linkedSignal avec pour source la catégorie :
-  // Lors d'un changement de catégorie, linkedSignal recalcule automatiquement
-  // la liste des produits tout en conservant le filtre de la chaîne saisie (search())
-  products = linkedSignal<string, ProductCategory[]>({
-    source: this.category,
-    computation: (cat) => this.filterProducts(this.search(), cat),
+  products = linkedSignal<filters, ProductCategory[]>({
+    source: () => ({ search: this.search(), category: this.category() }),
+    computation: (filt) => this.filterProducts(filt.search, filt.category),
   });
 
-  protected onSearch(value: string) {
-    this.search.set(value);
-    this.products.set(this.filterProducts(value, this.category()));
-  }
-
-  protected onCategoryChange(value: string) {
-    this.category.set(value);
-  }
-
-  protected reset(form?: HTMLInputElement, filter?: HTMLSelectElement) {
+  protected reset() {
     this.search.set('');
     this.category.set('');
-    this.products.set(this.allProducts);
-    if (form) form.value = '';
-    if (filter) filter.value = '';
   }
 
   private filterProducts(search: string, category: string): ProductCategory[] {

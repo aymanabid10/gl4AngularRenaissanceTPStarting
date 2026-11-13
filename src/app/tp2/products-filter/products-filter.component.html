@@ -2,17 +2,13 @@
 
 <input
   class="form-control"
-  #form
   type="text"
   placeholder="Search products"
-  [value]="search()"
-  (input)="onSearch(form.value)"
+  [(ngModel)]="search"
 />
 <select
   class="form-control"
-  #filter
-  [value]="category()"
-  (change)="onCategoryChange(filter.value)"
+  [(ngModel)]="category"
 >
   <option value="">All</option>
   @for (c of categories; track c) {
@@ -20,7 +16,7 @@
   }
 </select>
 <section>
-  <button class="btn btn-danger" (click)="reset(form, filter)">Reset</button>
+  <button class="btn btn-danger" (click)="reset()">Reset</button>
 </section>
 <ul class="list-group">
   @for (product of products(); track product.name) {
