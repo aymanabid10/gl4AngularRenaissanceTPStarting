@@ -1,16 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  linkedSignal,
+  computed,
   signal,
 } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { PRODUCTS, ProductCategory } from './product.data';
-
-interface filters {
-  search: string;
-  category: string;
-}
+import { FilterCriteria } from './filter.interface';
 
 @Component({
   selector: 'app-products-filter',
@@ -21,26 +19,39 @@ interface filters {
   styleUrl: './products-filter.component.css',
 })
 export class ProductsFilterComponent {
-  readonly allProducts = PRODUCTS;
-  protected categories = [...new Set(PRODUCTS.map((p) => p.category))];
+  readonly allProducts = signal<ProductCategory[]>(PRODUCTS);
 
-  search = signal<string>('');
-  category = signal<string>('');
+  readonly categories = computed(() => [
+    ...new Set(this.allProducts().map((p) => p.category)),
+  ]);
 
-  products = linkedSignal<filters, ProductCategory[]>({
-    source: () => ({ search: this.search(), category: this.category() }),
-    computation: (filt) => this.filterProducts(filt.search, filt.category),
-  });
+  readonly search = signal<string>('');
+  readonly category = signal<string>('');
+
+  private readonly search$ = toObservable(this.search).pipe(
+    debounceTime(300),
+    distinctUntilChanged()
+  );
+  readonly debouncedSearch = toSignal(this.search$, { initialValue: '' });
+
+  readonly products = computed(() =>
+    this.filterProducts({
+      search: this.debouncedSearch(),
+      category: this.category(),
+    })
+  );
 
   protected reset() {
     this.search.set('');
     this.category.set('');
   }
 
-  private filterProducts(search: string, category: string): ProductCategory[] {
-    const s = search.trim().toLowerCase();
-    return this.allProducts.filter((product) => {
-      const matchesCategory = !category || product.category === category;
+  private filterProducts(filters: FilterCriteria): ProductCategory[] {
+    const s = filters.search.trim().toLowerCase();
+    const cat = filters.category;
+
+    return this.allProducts().filter((product) => {
+      const matchesCategory = !cat || product.category === cat;
       const matchesSearch = !s || product.name.toLowerCase().includes(s);
       return matchesCategory && matchesSearch;
     });
