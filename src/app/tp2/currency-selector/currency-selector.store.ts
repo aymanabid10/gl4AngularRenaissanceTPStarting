@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { COUNTRIES } from '../data/countries.token';
 import { Country } from '../model/country.interface';
+import { resolveCurrency } from './currency.rules';
 
 @Injectable()
 export class CurrencySelectorStore {
@@ -17,7 +18,11 @@ export class CurrencySelectorStore {
 
   readonly currencies = computed(() => this.#country().acceptedCurrencies);
 
-  readonly #currency = linkedSignal(() => this.currencies()[0]);
+  readonly #currency = linkedSignal<Country, string>({
+    source: this.#country,
+    computation: (country, previous) =>
+      resolveCurrency(country, previous?.value),
+  });
   readonly currency = this.#currency.asReadonly();
 
   selectCountry(country: Country): void {
