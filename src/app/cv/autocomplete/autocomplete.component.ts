@@ -1,9 +1,11 @@
-import { Component, ChangeDetectionStrategy, computed, inject, signal } from "@angular/core";
-import { rxResource, toObservable, toSignal } from "@angular/core/rxjs-interop";
-import { debounceTime } from "rxjs";
+import { Component, ChangeDetectionStrategy, computed, debounced, inject, signal } from "@angular/core";
+import { rxResource } from "@angular/core/rxjs-interop";
 import { CvService } from "../services/cv.service";
 import { ListComponent } from "../list/list.component";
 import { CvCardComponent } from "../cv-card/cv-card.component";
+
+const MIN_LETTERS = 3;
+const DEBOUNCE_MS = 300;
 
 @Component({
     selector: "app-autocomplete",
@@ -14,18 +16,22 @@ import { CvCardComponent } from "../cv-card/cv-card.component";
 })
 export class AutocompleteComponent {
   private cvService = inject(CvService);
+  protected readonly minLetters = MIN_LETTERS;
 
   readonly searchTerm = signal("");
 
-  private readonly trimmedTerm = computed(() => this.searchTerm().trim());
+  protected readonly trimmedTerm = computed(() => this.searchTerm().trim());
 
-  private readonly debouncedTerm = toSignal(
-    toObservable(this.trimmedTerm).pipe(debounceTime(300)),
-    { initialValue: "" }
-  );
+  private readonly debouncedTerm = debounced(this.trimmedTerm, DEBOUNCE_MS);
+
+  protected readonly searchParam = computed(() => {
+    const term = this.debouncedTerm.value();
+    const letters = term.replace(/[^\p{L}]/gu, "").length;
+    return letters >= MIN_LETTERS ? term : undefined;
+  });
 
   readonly cvs = rxResource({
-    params: () => this.debouncedTerm() || undefined,
+    params: this.searchParam,
     stream: ({ params }) => this.cvService.selectByName(params),
     defaultValue: [],
   });
