@@ -35,6 +35,13 @@ const routes: Route[] = [
             (m) => m.ProductsFilterComponent
           ),
       },
+      {
+        path: "currency",
+        loadComponent: () =>
+          import(
+            "./tp2/currency-selector/country-currency-selector.component"
+          ).then((m) => m.CountryCurrencySelectorComponent),
+      },
       { path: "todo", component: TodoComponent },
       { path: "ttc", component: TtcComponent },
       { path: "word", component: MiniWordComponent },
