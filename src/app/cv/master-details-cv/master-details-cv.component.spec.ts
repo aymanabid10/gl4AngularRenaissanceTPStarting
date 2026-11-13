@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { of, throwError } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 import { MasterDetailsCvComponent } from './master-details-cv.component';
@@ -69,12 +69,34 @@ describe('MasterDetailsCvComponent', () => {
     expect(active[0].getAttribute('href')).toBe('/list/2');
   });
 
-  it('shows an error toast and an empty list when the cvs cannot be loaded', async () => {
+  it('shows a loading indicator while the cvs are being fetched', async () => {
+    cvService.getCvs.and.returnValue(NEVER);
+
+    const harness = await navigateTo('/list');
+
+    const element: HTMLElement = harness.routeNativeElement!;
+    expect(element.querySelector('.spinner-border')).not.toBeNull();
+    expect(element.querySelectorAll('a').length).toBe(0);
+  });
+
+  it('shows an empty message when the server returns no cv', async () => {
+    cvService.getCvs.and.returnValue(of([]));
+
+    const harness = await navigateTo('/list');
+
+    const element: HTMLElement = harness.routeNativeElement!;
+    expect(element.textContent).toContain('Aucun CV disponible');
+    expect(element.querySelector('.alert-danger')).toBeNull();
+  });
+
+  it('shows an error message and a toast when the cvs cannot be loaded', async () => {
     cvService.getCvs.and.returnValue(throwError(() => new Error('server down')));
 
     const harness = await navigateTo('/list');
 
-    expect(harness.routeNativeElement!.querySelectorAll('a').length).toBe(0);
+    const element: HTMLElement = harness.routeNativeElement!;
+    expect(element.querySelector('.alert-danger')).not.toBeNull();
+    expect(element.querySelectorAll('a').length).toBe(0);
     expect(toastr.error).toHaveBeenCalledTimes(1);
   });
 });
