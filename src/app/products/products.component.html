@@ -1,7 +1,7 @@
 @if (vm$ | async; as vm) {
 
   <div class="alert alert-warning">
-      Product Number: {{ vm.loaded }} / {{ vm.total }}
+      Product Number: {{ vm.products.length }} / {{ vm.total }}
   </div>
 
   @if (vm.products.length > 0) {
@@ -42,7 +42,7 @@
       <button
           class="btn btn-danger ms-2"
           type="button"
-          (click)="retry()"
+          (click)="loadMore()"
       >
           Retry
       </button>
@@ -62,7 +62,7 @@
 
   }
 
-  @if (!vm.hasMore && !vm.error && vm.loaded > 0) {
+  @if (!vm.hasMore && !vm.error && vm.products.length > 0) {
 
     <div class="alert alert-success mt-3">
         All products have been loaded.
@@ -70,7 +70,7 @@
 
   }
 
-  @if (!vm.loading && !vm.error && vm.loaded === 0) {
+  @if (!vm.loading && !vm.error && vm.products.length === 0) {
 
     <div class="alert alert-secondary">
         No products available.
