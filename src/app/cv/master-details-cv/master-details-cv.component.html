@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-md-5">
+    <div class="list-group">
+      @for (cv of cvs$ | async; track cv.id) {
+        <!-- Relative link: resolved against the 'list' route, giving /cv/list/:id -->
+        <a
+          class="list-group-item list-group-item-action"
+          [routerLink]="[cv.id]"
+          routerLinkActive="active"
+        >
+          <img
+            class="rounded-circle me-2"
+            width="50"
+            height="50"
+            src="assets/images/{{ cv.path | defaultImage }}"
+            alt="{{ cv.name }}"
+          />
+          {{ cv.firstname }} {{ cv.name }}
+        </a>
+      }
+    </div>
+  </div>
+  <div class="col-md-7">
+    <router-outlet></router-outlet>
+  </div>
+</div>
