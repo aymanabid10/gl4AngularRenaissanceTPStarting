@@ -1,17 +1,39 @@
-@if ((products$ | async); as productsList) {
-  <button class="btn btn-primary"> More Products</button>
+@if (vm$ | async; as vm) {
+
   <div class="alert alert-warning">
-    Product Number: {{productsList?.length}}
+    Product Number: {{ vm.products.length }} / {{ vm.total }}
   </div>
-  <div class="row">
-    @for (product of productsList; track product) {
-      <div class="col-4">
-        <img class="rounded-circle" src="{{product.thumbnail}}" width="150px" height="150px">
-        {{product.title}}
-      </div>
-    }
-  </div>
+
+  @if (vm.products.length) {
+    <div class="row">
+      @for (product of vm.products; track product.id) {
+        <div class="col-4">
+          <img
+            class="rounded-circle"
+            [src]="product.thumbnail"
+            [alt]="product.title"
+            width="150"
+            height="150"
+            loading="lazy"
+            decoding="async"
+          />
+          {{ product.title }}
+        </div>
+      }
+    </div>
+  } @else {
+    Loading...
+  }
+
+  <button
+    class="btn btn-primary"
+    type="button"
+    [disabled]="!vm.hasMore"
+    (click)="loadMore()"
+  >
+    More Products
+  </button>
+  
 } @else {
   Loading...
 }
-
