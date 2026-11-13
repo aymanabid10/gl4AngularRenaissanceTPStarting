@@ -14,6 +14,7 @@ import { DetailsCvComponent } from "./cv/details-cv/details-cv.component";
 import { RhComponent } from "./optimizationPattern/rh/rh.component";
 import { NgclassComponent } from "./directives/ngclass/ngclass.component";
 import { TtcComponent } from "./ttc/ttc/ttc.component";
+import { AutocompleteComponent } from "./cv/autocomplete/autocomplete.component";
 
 const routes: Route[] = [
   { path: "login", component: LoginComponent },
@@ -23,6 +24,7 @@ const routes: Route[] = [
     component: CvComponent,
   },
   { path: "cv/add", component: AddCvComponent, canActivate: [AuthGuard] },
+  { path: "cv/autocomplete", component: AutocompleteComponent },
   { path: "cv/:id", component: DetailsCvComponent },
   {
     path: "",

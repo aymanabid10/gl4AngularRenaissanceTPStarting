@@ -3,7 +3,8 @@ import { isDevMode, importProvidersFrom, APP_INITIALIZER } from "@angular/core";
 
 import { AuthInterceptorProvider } from "./app/auth/interceptors/auth.interceptor";
 import { AuthService } from "./app/auth/services/auth.service";
-import { provideHttpClient, withXhr, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withXhr, withInterceptorsFromDi, withInterceptors } from "@angular/common/http";
+import { httpCacheInterceptor } from "./app/interceptors/http-cache.interceptor";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -11,6 +12,7 @@ import { ToastrModule } from "ngx-toastr";
 import { AppRoutingModule } from "./app/app-routing.module";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { AppComponent } from "./app/app.component";
+
 
 
 bootstrapApplication(AppComponent, {
@@ -30,7 +32,11 @@ bootstrapApplication(AppComponent, {
             deps: [AuthService],
             multi: true,
         },
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClient(
+            withXhr(),
+            withInterceptorsFromDi(), // AuthInterceptor first: adds the token...
+            withInterceptors([httpCacheInterceptor]), // ...then the cache, whose key includes that token
+        ),
     ]
 })
   .catch(err => console.error(err));

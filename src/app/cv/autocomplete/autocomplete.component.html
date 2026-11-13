@@ -1,3 +1,24 @@
-<form [formGroup]="form">
-  <input type="text" class="form-control" formControlName="search" />
-</form>
+<input
+  #search
+  type="text"
+  class="form-control mb-2"
+  placeholder="Search a CV by name"
+  (input)="searchTerm.set(search.value)"
+/>
+
+@if (cvs.isLoading()) {
+  <p class="text-muted">Searching…</p>
+} @else if (cvs.error()) {
+  <div class="alert alert-danger d-flex justify-content-between align-items-center">
+    <span>Search failed, please try again.</span>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="cvs.reload()">Retry</button>
+  </div>
+} @else if (cvs.value().length) {
+  <app-list [cvs]="cvs.value()" />
+} @else if (searchParam()) {
+  <p class="text-muted">No CV found for "{{ searchParam() }}".</p>
+} @else if (trimmedTerm()) {
+  <p class="text-muted">Type at least {{ minLetters }} letters to search.</p>
+}
+
+<app-cv-card [cv]="selectedCv()" />
