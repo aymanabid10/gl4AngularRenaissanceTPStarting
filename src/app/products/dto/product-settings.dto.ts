@@ -1,4 +1,4 @@
-export interface Settings {
-    limit: number;
-    skip: number;
-  }
+export interface ProductSettings {
+  limit: number;
+  skip: number;
+}

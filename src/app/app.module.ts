@@ -41,6 +41,7 @@ import { LoginComponent } from "./auth/login/login.component";
 import { TestObservableComponent } from "./rxjs/test-observable/test-observable.component";
 import { TestHttpComponent } from "./components/test-http/test-http.component";
 import { authInterceptor } from "./auth/interceptors/auth.interceptor";
+import { httpCacheInterceptor } from "./interceptors/http-cache.interceptor";
 import { ListComponent } from "./cv/list/list.component";
 import { ItemComponent } from "./cv/item/item.component";
 import { DefaultImagePipe } from "./cv/pipes/default-image.pipe";
@@ -109,7 +110,10 @@ import { SliderComponent } from "./rxjs/slider/slider.component";
   ],
   providers: [
     provideZoneChangeDetection(),
-    provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
+    provideHttpClient(
+      withXhr(), // Enable XHR for HttpClient
+      withInterceptors([authInterceptor, httpCacheInterceptor]) // Add the interceptors here
+    ),
   ],
 })
 export class AppModule {}

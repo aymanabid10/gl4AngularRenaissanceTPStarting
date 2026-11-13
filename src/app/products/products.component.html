@@ -1,17 +1,87 @@
-@if ((products$ | async); as productsList) {
-  <button class="btn btn-primary"> More Products</button>
-  <div class="alert alert-warning">
-    Product Number: {{productsList?.length}}
-  </div>
-  <div class="row">
-    @for (product of productsList; track product) {
-      <div class="col-4">
-        <img class="rounded-circle" src="{{product.thumbnail}}" width="150px" height="150px">
-        {{product.title}}
-      </div>
-    }
-  </div>
-} @else {
-  Loading...
-}
+@if (vm$ | async; as vm) {
 
+  <div class="alert alert-warning">
+      Product Number: {{ vm.products.length }} / {{ vm.total }}
+  </div>
+
+  @if (vm.products.length > 0) {
+
+    <div class="row">
+      @for (product of vm.products; track product.id) {
+        <div class="col-4 mb-4">
+          <img
+              class="rounded-circle"
+              [src]="product.thumbnail"
+              [alt]="product.title"
+              width="150"
+              height="150"
+              loading="lazy"
+              decoding="async"
+          />
+
+          <h5>{{ product.title }}</h5>
+
+        </div>
+      }
+    </div>
+
+  }
+
+  @if (vm.loading) {
+
+    <div class="alert alert-info">
+        Loading products...
+    </div>
+
+  }
+
+  @if (vm.error) {
+
+    <div class="alert alert-danger">
+      Unable to load products. Please try again.
+      <button
+          class="btn btn-danger ms-2"
+          type="button"
+          (click)="loadMore()"
+      >
+          Retry
+      </button>
+    </div>
+
+  }
+
+  @if (vm.hasMore && !vm.loading && !vm.error) {
+
+    <button
+        class="btn btn-primary"
+        type="button"
+        (click)="loadMore()"
+    >
+        More Products
+    </button>
+
+  }
+
+  @if (!vm.hasMore && !vm.error && vm.products.length > 0) {
+
+    <div class="alert alert-success mt-3">
+        All products have been loaded.
+    </div>
+
+  }
+
+  @if (!vm.loading && !vm.error && vm.products.length === 0) {
+
+    <div class="alert alert-secondary">
+        No products available.
+    </div>
+
+  }
+
+} @else {
+
+  <div class="alert alert-info">
+      Initializing products...
+  </div>
+
+}
