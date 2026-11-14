@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-md-5">
+    <!-- @if (…; as) both unwraps the async pipe and lets the compiler narrow the union per status -->
+    @if (state$ | async; as state) {
+      @if (state.status === 'loading') {
+        <div class="text-center p-4" role="status">
+          <div class="spinner-border" aria-hidden="true"></div>
+          <p class="mt-2 mb-0">Chargement des CVs...</p>
+        </div>
+      } @else if (state.status === 'error') {
+        <div class="alert alert-danger" role="alert">Impossible de charger les CVs.</div>
+      } @else if (state.status === 'empty') {
+        <div class="alert alert-info" role="status">Aucun CV disponible.</div>
+      } @else {
+        <div class="list-group">
+          @for (cv of state.cvs; track cv.id) {
+            <!-- Relative link: resolved against the 'list' route, giving /cv/list/:id -->
+            <a
+              class="list-group-item list-group-item-action"
+              [routerLink]="[cv.id]"
+              routerLinkActive="active"
+            >
+              <img
+                class="rounded-circle me-2"
+                width="50"
+                height="50"
+                src="assets/images/{{ cv.path | defaultImage }}"
+                alt="{{ cv.name }}"
+              />
+              {{ cv.firstname }} {{ cv.name }}
+            </a>
+          }
+        </div>
+      }
+    }
+  </div>
+  <div class="col-md-7">
+    <router-outlet></router-outlet>
+  </div>
+</div>
