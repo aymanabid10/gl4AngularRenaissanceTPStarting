@@ -18,7 +18,6 @@ import { DefaultImagePipe } from "./pipes/default-image.pipe";
   declarations: [
     AddCvComponent,
     DetailsCvComponent,
-    AutocompleteComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +30,7 @@ import { DefaultImagePipe } from "./pipes/default-image.pipe";
     CvCardComponent,
     ItemComponent,
     DefaultImagePipe,
+    AutocompleteComponent,
   ],
 })
 export class CvModule {}
